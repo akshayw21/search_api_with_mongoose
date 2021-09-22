@@ -95,17 +95,20 @@ router.get("/searchtech/:tech",(req,res)=>{
 
 
 router.get('/sort',async(req,res)=>{
+    //console.log("/sort")
 //const getsort=async()=>{
     try{
-        const result=await TestDB.find({name:"Akshay"}).select({tech:1}).sort({tech:1});
+        const result=await TestDB.find({name:"Akshay"}).select({tech:1}).sort({tech:-1});
+        //console.log(result);
         res.json(result)
 
     }catch(err){
-        res.send(err);
+        res.send(err)
+        //console.log(err);
     }
 
-
+//}
 //getsort();
-})
 
+})
 module.exports=router
