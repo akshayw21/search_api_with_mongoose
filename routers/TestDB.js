@@ -3,12 +3,27 @@ const TestDB = require("../model/TestDB")
 const router=express.Router()
 
 
-router.get('/',async(req,res)=>{
+router.get('/',async(req,res,next)=>{
+    // try{
+    //     const testdb=await TestDB.find()
+    //     res.json(testdb)
+    // }catch(err){
+    //     res.send('Error')
+    // }
     try{
-        const testdb=await TestDB.find()
-        res.json(testdb)
-    }catch(err){
-        res.send('Error')
+        let{page,size}=req.query;
+        if(!page){
+            page=1;
+        }
+        if(!size){
+            size=10;
+        }
+        const limit=parseInt(size);
+        const skip=(page-1)*size;
+        const testdb=await TestDB.find().limit(limit).skip(skip);
+        res.send(testdb);
+    }catch(error){
+        res.status(500).send(error.message);
     }
 })
 
@@ -76,6 +91,21 @@ router.get("/searchtech/:tech",(req,res)=>{
     TestDB.find({tech:regex}).then((result)=>{
         res.status(200).json(result)
     })
+})
+
+
+router.get('/sort',async(req,res)=>{
+//const getsort=async()=>{
+    try{
+        const result=await TestDB.find({name:"Akshay"}).select({tech:1}).sort({tech:1});
+        res.json(result)
+
+    }catch(err){
+        res.send(err);
+    }
+
+
+//getsort();
 })
 
 module.exports=router
